@@ -25,6 +25,10 @@ impl Cell {
             Cell::Alive => Cell::Dead,
         };
     }
+
+    fn kill(&mut self) {
+        *self = Cell::Dead;
+    }
 }
 
 #[wasm_bindgen]
@@ -128,6 +132,16 @@ impl Universe {
 
     pub fn cells(&self) -> *const Cell {
         self.cells.as_ptr()
+    }
+
+    pub fn kill_cells(&mut self) {
+
+        for row in 0..self.height {
+            for col in 0..self.width {
+                let idx = self.get_index(row, col);
+                self.cells[idx].kill();
+            }
+        }
     }
     
     pub fn toggle_cell(&mut self, row: u32, column: u32) {
